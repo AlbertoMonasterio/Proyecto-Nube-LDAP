@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  openldap:
+    image: osixia/openldap:latest
+    container_name: openldap
+    ports:
+      - "389:389"
+    environment:
+      - LDAP_ORGANISATION=Universidad Catolica Andres Bello
+      - LDAP_DOMAIN=proyecto.ucab
+      - LDAP_ADMIN_PASSWORD=admin
+    volumes:
+      - ldap_data:/var/lib/ldap
+      - ldap_config:/etc/ldap/slapd.d
+
+  phpladpadmin:
+    image: osixia/phpldapadmin:latest
+    container_name: phpladpadmin
+    ports:
+      - "8080:80"
+    environment:
+      - PHPLDAPADMIN_LDAP_HOSTS=openldap
+      - PHPLDAPADMIN_HTTPS=false
+      - PHPLDAPADMIN_TRUST_PROXY_SSL=true
+    depends_on:
+      - openldap
+
+  auth-api:
+    build: ./auth-api
+    container_name: microservicio_auth
+    ports:
+      - "8000:8000"
+    depends_on:
+      - openldap
+
+  frontend:
+    build: ./frontend
+    container_name: web_frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - auth-api
+
+volumes:
+  ldap_data:
+  ldap_config:

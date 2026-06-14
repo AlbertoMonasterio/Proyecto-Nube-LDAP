@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8"> <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Login Profesional</title>
+	
+</head>
+<body class="bg-light">
+    <div class="container mt-5" style="max-width: 400px;">
+        <div id="login-box" class="card p-4 shadow">
+            <h3 class="text-center mb-4">Acceso Sistema</h3>
+            <input id="user" class="form-control mb-3" placeholder="Usuario">
+            <input id="pass" type="password" class="form-control mb-3" placeholder="Contraseña">
+            <button onclick="login()" class="btn btn-primary w-100">Ingresar</button>
+        </div>
+        <div id="welcome-box" class="card p-4 shadow d-none">
+            <h3 class="text-center">¡Bienvenido!</h3>
+            <p class="text-center lead" id="display-name"></p>
+            <button onclick="location.reload()" class="btn btn-secondary w-100">Salir</button>
+        </div>
+    </div>
+
+    <script>
+        async function login() {
+            const u = document.getElementById('user').value;
+            const res = await fetch('http://127.0.0.1:8000/api/v1/auth/login', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({username: u, password: document.getElementById('pass').value})
+            });
+            const data = await res.json();
+            if(data.status === 'success') {
+                document.getElementById('login-box').classList.add('d-none');
+                document.getElementById('welcome-box').classList.remove('d-none');
+                document.getElementById('display-name').innerText = data.username;
+            } else { alert("Credenciales incorrectas"); }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,18 @@
+# 1. Crear el grupo (Unidad Organizativa) de Ingeniería
+dn: ou=ingenieria,dc=proyecto,dc=ucab
+objectClass: organizationalUnit
+ou: ingenieria
+
+# 2. Crear tu usuario dentro del grupo de Ingeniería
+dn: cn=amonasterio,ou=ingenieria,dc=proyecto,dc=ucab
+objectClass: inetOrgPerson
+cn: amonasterio
+sn: Monasterio
+userPassword: 123456
+
+# 3. Crear un compañero de pruebas dentro de Ingeniería
+dn: cn=jmondim,ou=ingenieria,dc=proyecto,dc=ucab
+objectClass: inetOrgPerson
+cn: jmondim
+sn: Mondim
+userPassword: clave123

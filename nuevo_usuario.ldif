@@ -1,0 +1,5 @@
+dn: cn=amonasterio,dc=proyecto,dc=ucab
+objectClass: inetOrgPerson
+cn: amonasterio
+sn: Monasterio
+userPassword: 123456
