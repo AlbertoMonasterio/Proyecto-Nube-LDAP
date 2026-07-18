@@ -1,18 +1,37 @@
-# 1. Crear el grupo (Unidad Organizativa) de Ingeniería
-dn: ou=ingenieria,dc=proyecto,dc=ucab
+# 1. Crear el grupo (Unidad Organizativa) de Estudiantes
+dn: ou=estudiantes,dc=proyecto,dc=ucab
 objectClass: organizationalUnit
-ou: ingenieria
+ou: estudiantes
 
-# 2. Crear tu usuario dentro del grupo de Ingeniería
-dn: cn=amonasterio,ou=ingenieria,dc=proyecto,dc=ucab
+# 2. Crear el grupo (Unidad Organizativa) de Profesores
+dn: ou=profesores,dc=proyecto,dc=ucab
+objectClass: organizationalUnit
+ou: profesores
+
+# 3. Crear el grupo (Unidad Organizativa) de Administrativos
+dn: ou=administrativo,dc=proyecto,dc=ucab
+objectClass: organizationalUnit
+ou: administrativo
+
+# 4. Crear usuarios de prueba (Estudiantes)
+dn: cn=amonasterio,ou=estudiantes,dc=proyecto,dc=ucab
 objectClass: inetOrgPerson
 cn: amonasterio
 sn: Monasterio
 userPassword: 123456
+mail: amonasterio@est.ucab.edu.ve
 
-# 3. Crear un compañero de pruebas dentro de Ingeniería
-dn: cn=jmondim,ou=ingenieria,dc=proyecto,dc=ucab
+dn: cn=jmondim,ou=estudiantes,dc=proyecto,dc=ucab
 objectClass: inetOrgPerson
 cn: jmondim
 sn: Mondim
 userPassword: clave123
+mail: jmondim@est.ucab.edu.ve
+
+# 5. Crear usuario de prueba (Profesores)
+dn: cn=prof_lopez,ou=profesores,dc=proyecto,dc=ucab
+objectClass: inetOrgPerson
+cn: prof_lopez
+sn: Lopez
+userPassword: profepassword
+mail: elopez@prof.ucab.edu.ve
