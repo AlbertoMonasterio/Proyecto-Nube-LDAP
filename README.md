@@ -60,25 +60,48 @@ Este script se encargará de levantar todos los servicios y de forzar la inyecci
 
 ### 🌐 Portal de Usuarios (Frontend)
 - **URL:** [http://localhost](http://localhost)
-- **¿Qué puedes hacer?** Iniciar sesión, ver el directorio de usuarios de la universidad en el Dashboard, y registrar nuevas cuentas.
+- **¿Qué puedes hacer?** Iniciar sesión y ver el directorio de usuarios de la universidad en el Dashboard. El registro público fue eliminado (ver sección de RBAC): solo un usuario con rol `admins` puede crear cuentas nuevas, desde el propio Dashboard.
 - **Usuarios de prueba pre-cargados:**
-  - `amonasterio` (Clave: `123456`)
-  - `prof_lopez` (Clave: `profepassword`)
+  - `amonasterio` (Clave: `123456`) — rol `estudiantes`
+  - `jmondim` (Clave: `clave123`) — rol `estudiantes`
+  - `prof_lopez` (Clave: `profepassword`) — rol `profesores`
+  - `dcastillo` (Clave: `adminpassword`) — rol `admins` (panel de administración habilitado en el Dashboard)
 
 ### 🛠️ Portal del Administrador (phpLDAPadmin)
 - **URL:** [http://localhost:8080](http://localhost:8080)
 - **Login DN:** `cn=admin,dc=proyecto,dc=ucab`
 - **Contraseña:** `admin_ucab_seguro`
-- **¿Qué puedes hacer?** Control total. Auditar, borrar, modificar atributos directamente en el árbol LDAP y gestionar de forma profunda toda la estructura.
+- **¿Qué puedes hacer?** Control total. Auditar, borrar, modificar atributos directamente en el árbol LDAP y gestionar de forma profunda toda la estructura. Esta es la credencial raíz de LDAP (usada internamente por `auth-api` para conectarse), no un usuario de la aplicación — para eso está `dcastillo`.
 
 ### 🔌 Documentación de la API (Swagger UI)
 - **URL:** [http://localhost:8000/docs](http://localhost:8000/docs)
-- **¿Qué puedes hacer?** Ver todos los endpoints disponibles del backend (`/api/v1/auth/login`, `/api/v1/users`), sus formatos de Request/Response y probarlos manualmente.
+- **¿Qué puedes hacer?** Ver todos los endpoints disponibles del backend, sus formatos de Request/Response y probarlos manualmente.
+
+---
+
+## 🛡️ Control de Acceso por Roles (RBAC)
+
+Los roles se manejan con grupos LDAP dedicados (`groupOfNames`) bajo `ou=grupos`, **independientes** del departamento/OU de cada usuario (`estudiantes`/`profesores`/`administrativo` sigue siendo solo organizativo). Un usuario obtiene sus roles al hacer login: quedan embebidos como claim `roles` en el JWT y determinan qué puede hacer en la API y qué controles ve en el Dashboard.
+
+**Roles existentes:** `admins`, `profesores`, `estudiantes`.
+
+**Endpoints protegidos (requieren rol `admins`):**
+
+| Método | Path | Acción |
+| --- | --- | --- |
+| POST | `/api/v1/users` | Crear usuario (antes era registro público, ahora solo admin) |
+| DELETE | `/api/v1/users/{username}` | Eliminar usuario |
+| PUT | `/api/v1/users/{username}/role` | Asignar (`action: "add"`) o quitar (`action: "remove"`) un rol |
+
+`GET /api/v1/users` sigue abierto a cualquier usuario autenticado (solo lectura), y ahora incluye el campo `roles` de cada usuario en la respuesta.
+
+**Guardas de seguridad:** un admin no puede eliminar su propia cuenta ni quitarse a sí mismo el rol `admins`, para evitar quedar bloqueado del sistema.
 
 ---
 
 ## 📝 Notas para el Desarrollo Futuro
 
 - **Variables de Entorno (`.env`):** Las contraseñas fuertes (como la clave maestra de LDAP o el secreto del JWT) ahora se manejan a través del archivo `.env`. Si necesitas modificar una credencial base, hazlo allí.
+- **RBAC (`estructura_completa.ldif`):** para agregar un rol nuevo, creá un `groupOfNames` más bajo `ou=grupos,dc=proyecto,dc=ucab` (con al menos un `member` inicial, es requisito del esquema) y sumá su `cn` a `ROLE_GROUPS` en `auth-api/ldap_adapter.py`.
 - **Frontend CSS:** El frontend no usa frameworks pesados como React ni librerías como Tailwind o Bootstrap. Todo el diseño "Premium" está escrito de cero en `frontend/styles.css`.
 - **Datos Iniciales (`.ldif`):** Si necesitas que el sistema inicie con más usuarios o departamentos de prueba por defecto, simplemente agrégalos al archivo `estructura_completa.ldif`. El script `start.ps1` se encarga del resto.

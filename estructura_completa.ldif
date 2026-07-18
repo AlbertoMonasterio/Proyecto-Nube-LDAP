@@ -35,3 +35,38 @@ cn: prof_lopez
 sn: Lopez
 userPassword: profepassword
 mail: elopez@prof.ucab.edu.ve
+
+# 6. Contenedor de Grupos de Roles (RBAC)
+dn: ou=grupos,dc=proyecto,dc=ucab
+objectClass: organizationalUnit
+ou: grupos
+
+# 7. Usuario administrativo de prueba, distinto del bind DN raiz
+dn: cn=dcastillo,ou=administrativo,dc=proyecto,dc=ucab
+objectClass: inetOrgPerson
+cn: dcastillo
+sn: Castillo
+userPassword: adminpassword
+mail: dcastillo@admin.ucab.edu.ve
+
+# 8. Grupo de rol: administradores
+dn: cn=admins,ou=grupos,dc=proyecto,dc=ucab
+objectClass: groupOfNames
+cn: admins
+description: Rol administrativo con permisos de gestion de usuarios
+member: cn=dcastillo,ou=administrativo,dc=proyecto,dc=ucab
+
+# 9. Grupo de rol: profesores
+dn: cn=profesores,ou=grupos,dc=proyecto,dc=ucab
+objectClass: groupOfNames
+cn: profesores
+description: Rol docente
+member: cn=prof_lopez,ou=profesores,dc=proyecto,dc=ucab
+
+# 10. Grupo de rol: estudiantes
+dn: cn=estudiantes,ou=grupos,dc=proyecto,dc=ucab
+objectClass: groupOfNames
+cn: estudiantes
+description: Rol estudiantil
+member: cn=amonasterio,ou=estudiantes,dc=proyecto,dc=ucab
+member: cn=jmondim,ou=estudiantes,dc=proyecto,dc=ucab

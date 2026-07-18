@@ -34,13 +34,25 @@
                     <input type="password" id="pass" required placeholder="••••••••">
                 </div>
                 <button type="submit" class="btn btn-primary" id="btn-login">Ingresar</button>
-                <div class="switch-form">
-                    <span>¿No tienes cuenta? <a href="#" onclick="toggleAuthForm('register')">Regístrate</a></span>
-                </div>
             </form>
 
-            <!-- Register Form (Oculto por defecto) -->
-            <form id="register-form" class="hidden" onsubmit="handleRegister(event)">
+            <div id="error-msg" class="error-msg hidden"></div>
+            <div id="success-msg" class="success-msg hidden"></div>
+        </div>
+
+        <!-- VISTA DE DASHBOARD (Oculta por defecto) -->
+        <div id="dashboard-view" class="glass-panel dashboard hidden">
+            <header class="dash-header">
+                <div>
+                    <h2>Bienvenido, <span id="display-name" class="text-highlight"></span></h2>
+                    <p class="subtitle">Directorio de la Universidad</p>
+                </div>
+                <button onclick="logout()" class="btn btn-secondary">Cerrar Sesión</button>
+            </header>
+
+            <!-- Panel de creación de usuarios (solo admins) -->
+            <form id="admin-create-form" class="hidden admin-panel" onsubmit="handleAdminCreateUser(event)">
+                <h3>Crear usuario</h3>
                 <div class="input-row">
                     <div class="input-group">
                         <label>Usuario</label>
@@ -69,26 +81,8 @@
                         <input type="password" id="reg-pass" required placeholder="••••••••">
                     </div>
                 </div>
-                
-                <button type="submit" class="btn btn-primary">Crear Cuenta</button>
-                <div class="switch-form">
-                    <span>¿Ya tienes cuenta? <a href="#" onclick="toggleAuthForm('login')">Ingresa</a></span>
-                </div>
+                <button type="submit" class="btn btn-primary">Crear usuario</button>
             </form>
-
-            <div id="error-msg" class="error-msg hidden"></div>
-            <div id="success-msg" class="success-msg hidden"></div>
-        </div>
-
-        <!-- VISTA DE DASHBOARD (Oculta por defecto) -->
-        <div id="dashboard-view" class="glass-panel dashboard hidden">
-            <header class="dash-header">
-                <div>
-                    <h2>Bienvenido, <span id="display-name" class="text-highlight"></span></h2>
-                    <p class="subtitle">Directorio de la Universidad</p>
-                </div>
-                <button onclick="logout()" class="btn btn-secondary">Cerrar Sesión</button>
-            </header>
 
             <div class="table-container">
                 <table id="users-table">
@@ -98,6 +92,8 @@
                             <th>Apellido</th>
                             <th>Departamento</th>
                             <th>Correo</th>
+                            <th>Rol</th>
+                            <th class="admin-only hidden">Acciones</th>
                         </tr>
                     </thead>
                     <tbody id="users-tbody">
