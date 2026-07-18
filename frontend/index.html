@@ -1,41 +1,114 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8"> <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <title>Login Profesional</title>
-	
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Directorio LDAP UCAB</title>
+    <!-- Google Fonts: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
 </head>
-<body class="bg-light">
-    <div class="container mt-5" style="max-width: 400px;">
-        <div id="login-box" class="card p-4 shadow">
-            <h3 class="text-center mb-4">Acceso Sistema</h3>
-            <input id="user" class="form-control mb-3" placeholder="Usuario">
-            <input id="pass" type="password" class="form-control mb-3" placeholder="Contraseña">
-            <button onclick="login()" class="btn btn-primary w-100">Ingresar</button>
+<body>
+    <!-- Particulas Decorativas (Efecto Visual) -->
+    <div class="bg-shape shape-1"></div>
+    <div class="bg-shape shape-2"></div>
+    <div class="bg-shape shape-3"></div>
+
+    <div class="app-container">
+        <!-- VISTA DE LOGIN / REGISTRO -->
+        <div id="auth-view" class="glass-panel slide-up">
+            <div class="brand">
+                <div class="logo">UCAB</div>
+                <h2>Directorio Central</h2>
+                <p>Acceso Seguro LDAP</p>
+            </div>
+
+            <!-- Login Form -->
+            <form id="login-form" onsubmit="handleLogin(event)">
+                <div class="input-group">
+                    <label>Usuario</label>
+                    <input type="text" id="user" required placeholder="ej. amonasterio">
+                </div>
+                <div class="input-group">
+                    <label>Contraseña</label>
+                    <input type="password" id="pass" required placeholder="••••••••">
+                </div>
+                <button type="submit" class="btn btn-primary" id="btn-login">Ingresar</button>
+                <div class="switch-form">
+                    <span>¿No tienes cuenta? <a href="#" onclick="toggleAuthForm('register')">Regístrate</a></span>
+                </div>
+            </form>
+
+            <!-- Register Form (Oculto por defecto) -->
+            <form id="register-form" class="hidden" onsubmit="handleRegister(event)">
+                <div class="input-row">
+                    <div class="input-group">
+                        <label>Usuario</label>
+                        <input type="text" id="reg-user" required placeholder="ej. lperez">
+                    </div>
+                    <div class="input-group">
+                        <label>Apellido</label>
+                        <input type="text" id="reg-lastname" required placeholder="Pérez">
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>Correo Electrónico</label>
+                    <input type="email" id="reg-email" required placeholder="lperez@ucab.edu.ve">
+                </div>
+                <div class="input-row">
+                    <div class="input-group">
+                        <label>Departamento</label>
+                        <select id="reg-dept">
+                            <option value="estudiantes">Estudiantes</option>
+                            <option value="profesores">Profesores</option>
+                            <option value="administrativo">Administrativo</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label>Contraseña</label>
+                        <input type="password" id="reg-pass" required placeholder="••••••••">
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn btn-primary">Crear Cuenta</button>
+                <div class="switch-form">
+                    <span>¿Ya tienes cuenta? <a href="#" onclick="toggleAuthForm('login')">Ingresa</a></span>
+                </div>
+            </form>
+
+            <div id="error-msg" class="error-msg hidden"></div>
+            <div id="success-msg" class="success-msg hidden"></div>
         </div>
-        <div id="welcome-box" class="card p-4 shadow d-none">
-            <h3 class="text-center">¡Bienvenido!</h3>
-            <p class="text-center lead" id="display-name"></p>
-            <button onclick="location.reload()" class="btn btn-secondary w-100">Salir</button>
+
+        <!-- VISTA DE DASHBOARD (Oculta por defecto) -->
+        <div id="dashboard-view" class="glass-panel dashboard hidden">
+            <header class="dash-header">
+                <div>
+                    <h2>Bienvenido, <span id="display-name" class="text-highlight"></span></h2>
+                    <p class="subtitle">Directorio de la Universidad</p>
+                </div>
+                <button onclick="logout()" class="btn btn-secondary">Cerrar Sesión</button>
+            </header>
+
+            <div class="table-container">
+                <table id="users-table">
+                    <thead>
+                        <tr>
+                            <th>Usuario</th>
+                            <th>Apellido</th>
+                            <th>Departamento</th>
+                            <th>Correo</th>
+                        </tr>
+                    </thead>
+                    <tbody id="users-tbody">
+                        <!-- Las filas se llenarán con JS -->
+                    </tbody>
+                </table>
+                <div id="loading-users" class="loading">Cargando directorio...</div>
+            </div>
         </div>
     </div>
 
-    <script>
-        async function login() {
-            const u = document.getElementById('user').value;
-            const res = await fetch('http://127.0.0.1:8000/api/v1/auth/login', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({username: u, password: document.getElementById('pass').value})
-            });
-            const data = await res.json();
-            if(data.status === 'success') {
-                document.getElementById('login-box').classList.add('d-none');
-                document.getElementById('welcome-box').classList.remove('d-none');
-                document.getElementById('display-name').innerText = data.username;
-            } else { alert("Credenciales incorrectas"); }
-        }
-    </script>
+    <script src="app.js"></script>
 </body>
 </html>
