@@ -1,72 +1,116 @@
-# 1. Crear el grupo (Unidad Organizativa) de Estudiantes
-dn: ou=estudiantes,dc=proyecto,dc=ucab
+# 1. Organización principal (Facultades y Departamentos)
+dn: ou=Ingenieria,dc=proyecto,dc=ucab
 objectClass: organizationalUnit
-ou: estudiantes
+ou: Ingenieria
 
-# 2. Crear el grupo (Unidad Organizativa) de Profesores
-dn: ou=profesores,dc=proyecto,dc=ucab
+dn: ou=Derecho,dc=proyecto,dc=ucab
 objectClass: organizationalUnit
-ou: profesores
+ou: Derecho
 
-# 3. Crear el grupo (Unidad Organizativa) de Administrativos
-dn: ou=administrativo,dc=proyecto,dc=ucab
+dn: ou=Medicina,dc=proyecto,dc=ucab
 objectClass: organizationalUnit
-ou: administrativo
+ou: Medicina
 
-# 4. Crear usuarios de prueba (Estudiantes)
-dn: cn=amonasterio,ou=estudiantes,dc=proyecto,dc=ucab
-objectClass: inetOrgPerson
-cn: amonasterio
-sn: Monasterio
-userPassword: 123456
-mail: amonasterio@est.ucab.edu.ve
+dn: ou=Administracion,dc=proyecto,dc=ucab
+objectClass: organizationalUnit
+ou: Administracion
 
-dn: cn=jmondim,ou=estudiantes,dc=proyecto,dc=ucab
-objectClass: inetOrgPerson
-cn: jmondim
-sn: Mondim
-userPassword: clave123
-mail: jmondim@est.ucab.edu.ve
+dn: ou=RRHH,dc=proyecto,dc=ucab
+objectClass: organizationalUnit
+ou: RRHH
 
-# 5. Crear usuario de prueba (Profesores)
-dn: cn=prof_lopez,ou=profesores,dc=proyecto,dc=ucab
-objectClass: inetOrgPerson
-cn: prof_lopez
-sn: Lopez
-userPassword: profepassword
-mail: elopez@prof.ucab.edu.ve
-
-# 6. Contenedor de Grupos de Roles (RBAC)
+# 2. Contenedor de Grupos de Roles (RBAC)
 dn: ou=grupos,dc=proyecto,dc=ucab
 objectClass: organizationalUnit
 ou: grupos
 
-# 7. Usuario administrativo de prueba, distinto del bind DN raiz
-dn: cn=dcastillo,ou=administrativo,dc=proyecto,dc=ucab
+# 3. Usuarios de prueba
+dn: cn=amonasterio,ou=Ingenieria,dc=proyecto,dc=ucab
+objectClass: inetOrgPerson
+cn: amonasterio
+givenName: Alberto
+sn: Monasterio
+userPassword: {SSHA}JZFxasku4DXc3W9WnAXZT6zIVWn3LMg4
+mail: amonasterio@est.ucab.edu.ve
+
+dn: cn=jmondim,ou=Ingenieria,dc=proyecto,dc=ucab
+objectClass: inetOrgPerson
+cn: jmondim
+givenName: Jose
+sn: Mondim
+userPassword: {SSHA}eFR85YbfIOfBSFTxbmPuPj5CqiQdAKK9
+mail: jmondim@est.ucab.edu.ve
+
+dn: cn=prof_lopez,ou=Ingenieria,dc=proyecto,dc=ucab
+objectClass: inetOrgPerson
+cn: prof_lopez
+givenName: Eduardo
+sn: Lopez
+userPassword: {SSHA}DG/efyGPghwEHFk/FkS/ZgolEE9CwU/L
+mail: elopez@prof.ucab.edu.ve
+
+dn: cn=dcastillo,ou=Ingenieria,dc=proyecto,dc=ucab
 objectClass: inetOrgPerson
 cn: dcastillo
+givenName: Daniel
 sn: Castillo
-userPassword: adminpassword
+userPassword: {SSHA}yW6kGXEWzhsu73ERqCMhw0t+P31k1kLJ
 mail: dcastillo@admin.ucab.edu.ve
 
-# 8. Grupo de rol: administradores
+dn: cn=lejimenez,ou=Derecho,dc=proyecto,dc=ucab
+objectClass: inetOrgPerson
+cn: lejimenez
+givenName: Levin
+sn: Jimenez
+userPassword: {SSHA}eFR85YbfIOfBSFTxbmPuPj5CqiQdAKK9
+mail: lejimenez@est.ucab.edu.ve
+
+dn: cn=mrodriguez,ou=Administracion,dc=proyecto,dc=ucab
+objectClass: inetOrgPerson
+cn: mrodriguez
+givenName: Maria
+sn: Rodriguez
+userPassword: {SSHA}eFR85YbfIOfBSFTxbmPuPj5CqiQdAKK9
+mail: mrodriguez@prof.ucab.edu.ve
+
+dn: cn=cgonzalez,ou=RRHH,dc=proyecto,dc=ucab
+objectClass: inetOrgPerson
+cn: cgonzalez
+givenName: Carlos
+sn: Gonzalez
+userPassword: {SSHA}eFR85YbfIOfBSFTxbmPuPj5CqiQdAKK9
+mail: cgonzalez@admin.ucab.edu.ve
+
+dn: cn=alopez,ou=Medicina,dc=proyecto,dc=ucab
+objectClass: inetOrgPerson
+cn: alopez
+givenName: Ana
+sn: Lopez
+userPassword: {SSHA}eFR85YbfIOfBSFTxbmPuPj5CqiQdAKK9
+mail: alopez@est.ucab.edu.ve
+
+# 4. Grupo de rol: administradores
 dn: cn=admins,ou=grupos,dc=proyecto,dc=ucab
 objectClass: groupOfNames
 cn: admins
 description: Rol administrativo con permisos de gestion de usuarios
-member: cn=dcastillo,ou=administrativo,dc=proyecto,dc=ucab
+member: cn=dcastillo,ou=Ingenieria,dc=proyecto,dc=ucab
+member: cn=cgonzalez,ou=RRHH,dc=proyecto,dc=ucab
 
-# 9. Grupo de rol: profesores
+# 5. Grupo de rol: profesores
 dn: cn=profesores,ou=grupos,dc=proyecto,dc=ucab
 objectClass: groupOfNames
 cn: profesores
 description: Rol docente
-member: cn=prof_lopez,ou=profesores,dc=proyecto,dc=ucab
+member: cn=prof_lopez,ou=Ingenieria,dc=proyecto,dc=ucab
+member: cn=mrodriguez,ou=Administracion,dc=proyecto,dc=ucab
 
-# 10. Grupo de rol: estudiantes
+# 6. Grupo de rol: estudiantes
 dn: cn=estudiantes,ou=grupos,dc=proyecto,dc=ucab
 objectClass: groupOfNames
 cn: estudiantes
 description: Rol estudiantil
-member: cn=amonasterio,ou=estudiantes,dc=proyecto,dc=ucab
-member: cn=jmondim,ou=estudiantes,dc=proyecto,dc=ucab
+member: cn=amonasterio,ou=Ingenieria,dc=proyecto,dc=ucab
+member: cn=jmondim,ou=Ingenieria,dc=proyecto,dc=ucab
+member: cn=lejimenez,ou=Derecho,dc=proyecto,dc=ucab
+member: cn=alopez,ou=Medicina,dc=proyecto,dc=ucab
