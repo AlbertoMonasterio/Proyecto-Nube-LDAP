@@ -15,6 +15,12 @@
     <div class="bg-shape shape-3"></div>
 
     <div class="app-container">
+        <!-- Contenedor de notificaciones (Toasts) -->
+        <div id="messages" style="position: fixed; top: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; pointer-events: none;">
+            <div id="error-msg" class="message error-message hidden" style="background: rgba(255,50,50,0.9); color: white; box-shadow: 0 10px 15px rgba(0,0,0,0.5); min-width: 250px; text-align: center; font-weight: bold; padding: 15px; border-radius: 8px; transition: opacity 0.3s ease;"></div>
+            <div id="success-msg" class="message success-message hidden" style="background: rgba(50,255,100,0.9); color: white; box-shadow: 0 10px 15px rgba(0,0,0,0.5); min-width: 250px; text-align: center; font-weight: bold; padding: 15px; border-radius: 8px; transition: opacity 0.3s ease;"></div>
+        </div>
+
         <!-- VISTA DE LOGIN / REGISTRO -->
         <div id="auth-view" class="glass-panel slide-up">
             <div class="brand">
@@ -35,9 +41,6 @@
                 </div>
                 <button type="submit" class="btn btn-primary" id="btn-login">Ingresar</button>
             </form>
-
-            <div id="error-msg" class="error-msg hidden"></div>
-            <div id="success-msg" class="success-msg hidden"></div>
         </div>
 
         <!-- VISTA DE DASHBOARD (Oculta por defecto) -->
@@ -47,21 +50,27 @@
                     <h2>Bienvenido, <span id="display-name" class="text-highlight"></span></h2>
                     <p class="subtitle">Directorio de la Universidad</p>
                 </div>
-                <button onclick="logout()" class="btn btn-secondary">Cerrar Sesión</button>
+                <div style="display: flex; gap: 10px;">
+                    <button onclick="openAuditModal()" class="btn btn-secondary admin-only hidden" style="border: 1px solid var(--primary); color: var(--primary); background: transparent;">Ver Auditoría</button>
+                    <button onclick="openPasswordModal()" class="btn btn-primary" style="background: var(--surface);">Cambiar Contraseña</button>
+                    <button onclick="logout()" class="btn btn-secondary">Cerrar Sesión</button>
+                </div>
             </header>
 
             <!-- Panel de creación de usuarios (solo admins) -->
-            <form id="admin-create-form" class="hidden admin-panel" onsubmit="handleAdminCreateUser(event)">
-                <h3>Crear usuario</h3>
-                <div class="input-row">
-                    <div class="input-group">
-                        <label>Usuario</label>
-                        <input type="text" id="reg-user" required placeholder="ej. lperez">
-                    </div>
-                    <div class="input-group">
-                        <label>Apellido</label>
-                        <input type="text" id="reg-lastname" required placeholder="Pérez">
-                    </div>
+            <form id="admin-create-form" class="hidden auth-form card fade-in" onsubmit="handleAdminCreateUser(event)">
+                <h3>Crear Nuevo Usuario</h3>
+                <div class="input-group">
+                    <label>Usuario</label>
+                    <input type="text" id="reg-user" required placeholder="ej. lperez">
+                </div>
+                <div class="input-group">
+                    <label>Nombre</label>
+                    <input type="text" id="reg-firstname" required placeholder="Juan">
+                </div>
+                <div class="input-group">
+                    <label>Apellido</label>
+                    <input type="text" id="reg-lastname" required placeholder="Pérez">
                 </div>
                 <div class="input-group">
                     <label>Correo Electrónico</label>
@@ -71,9 +80,11 @@
                     <div class="input-group">
                         <label>Departamento</label>
                         <select id="reg-dept">
-                            <option value="estudiantes">Estudiantes</option>
-                            <option value="profesores">Profesores</option>
-                            <option value="administrativo">Administrativo</option>
+                            <option value="Ingenieria">Facultad de Ingeniería</option>
+                            <option value="Derecho">Facultad de Derecho</option>
+                            <option value="Medicina">Facultad de Medicina</option>
+                            <option value="Administracion">Facultad de Administración</option>
+                            <option value="RRHH">Recursos Humanos</option>
                         </select>
                     </div>
                     <div class="input-group">
@@ -85,10 +96,20 @@
             </form>
 
             <div class="table-container">
+                <!-- BARRA DE BÚSQUEDA -->
+                <div style="margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                    <h3 style="margin: 0;">Directorio Activo</h3>
+                    <div style="position: relative; width: 100%; max-width: 300px;">
+                        <input type="text" id="search-input" placeholder="Buscar por nombre, rol, correo..." 
+                               style="width: 100%; padding: 10px 15px; border-radius: 8px; border: 1px solid var(--border); background: rgba(0,0,0,0.2); color: white; box-sizing: border-box;"
+                               onkeyup="filterTable()">
+                    </div>
+                </div>
                 <table id="users-table">
                     <thead>
                         <tr>
                             <th>Usuario</th>
+                            <th>Nombre</th>
                             <th>Apellido</th>
                             <th>Departamento</th>
                             <th>Correo</th>
@@ -103,6 +124,71 @@
                 <div id="loading-users" class="loading">Cargando directorio...</div>
             </div>
         </div>
+        
+        <!-- MODAL DE ROLES -->
+        <div id="role-modal" class="hidden" style="position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(5px); z-index: 100; display: flex; justify-content: center; align-items: center;">
+            <div class="glass-panel" style="width: 100%; max-width: 400px; padding: 30px;">
+                <h3 style="margin-bottom: 20px;">Gestionar Roles</h3>
+                <p style="margin-bottom: 15px; color: var(--text-muted);">Usuario: <strong id="modal-username" style="color: white;"></strong></p>
+                <div class="input-group" style="margin-bottom: 25px;">
+                    <label style="margin-bottom: 12px; display: block;">Roles Asignados:</label>
+                    <div style="display: flex; flex-direction: column; gap: 12px;">
+                        <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; color: white;">
+                            <input type="checkbox" id="role-admins" value="admins" style="width: 18px; height: 18px; cursor: pointer; accent-color: var(--primary);">
+                            <span>Administrador (admins)</span>
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; color: white;">
+                            <input type="checkbox" id="role-profesores" value="profesores" style="width: 18px; height: 18px; cursor: pointer; accent-color: var(--primary);">
+                            <span>Profesor (profesores)</span>
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; color: white;">
+                            <input type="checkbox" id="role-estudiantes" value="estudiantes" style="width: 18px; height: 18px; cursor: pointer; accent-color: var(--primary);">
+                            <span>Estudiante (estudiantes)</span>
+                        </label>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 10px;">
+                    <button class="btn btn-primary" onclick="submitRoleChanges()" id="btn-save-roles">Guardar</button>
+                    <button class="btn btn-secondary" onclick="closeRoleModal()">Cancelar</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODAL DE CAMBIO DE CONTRASEÑA -->
+        <div id="password-modal" class="hidden" style="position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(5px); z-index: 100; display: flex; justify-content: center; align-items: center;">
+            <div class="glass-panel" style="width: 100%; max-width: 400px; padding: 30px;">
+                <h3 style="margin-bottom: 20px;">Cambiar Contraseña</h3>
+                <div id="password-error" class="message error-message hidden" style="margin-bottom: 15px;"></div>
+                <form id="password-form" onsubmit="submitPasswordChange(event)">
+                    <div class="input-group" style="margin-bottom: 15px;">
+                        <label style="margin-bottom: 8px; display: block;">Contraseña Actual</label>
+                        <input type="password" id="old-pass" required placeholder="••••••••" style="width: 100%; box-sizing: border-box; background: var(--input-bg); border: 1px solid var(--border); border-radius: 8px; padding: 12px; color: white;">
+                    </div>
+                    <div class="input-group" style="margin-bottom: 25px;">
+                        <label style="margin-bottom: 8px; display: block;">Nueva Contraseña</label>
+                        <input type="password" id="new-pass" required placeholder="••••••••" style="width: 100%; box-sizing: border-box; background: var(--input-bg); border: 1px solid var(--border); border-radius: 8px; padding: 12px; color: white;">
+                    </div>
+                    <div style="display: flex; gap: 10px;">
+                        <button type="submit" class="btn btn-primary" id="btn-save-password">Actualizar</button>
+                        <button type="button" class="btn btn-secondary" onclick="closePasswordModal()">Cancelar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- MODAL DE AUDITORIA -->
+        <div id="audit-modal" class="hidden" style="position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(5px); z-index: 100; display: flex; justify-content: center; align-items: center;">
+            <div class="glass-panel" style="width: 100%; max-width: 700px; padding: 30px;">
+                <h3 style="margin-bottom: 20px;">Registros de Auditoría</h3>
+                <div id="audit-content" style="background: var(--input-bg); border: 1px solid var(--border); border-radius: 8px; padding: 15px; height: 300px; overflow-y: auto; color: #a0aec0; font-family: monospace; font-size: 13px; margin-bottom: 20px;">
+                    Cargando logs...
+                </div>
+                <div style="display: flex; justify-content: flex-end;">
+                    <button type="button" class="btn btn-secondary" onclick="closeAuditModal()">Cerrar</button>
+                </div>
+            </div>
+        </div>
+
     </div>
 
     <script src="app.js"></script>

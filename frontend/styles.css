@@ -24,8 +24,7 @@ body {
     min-height: 100vh;
     display: flex;
     justify-content: center;
-    align-items: center;
-    overflow: hidden;
+    overflow-x: hidden;
     position: relative;
 }
 
@@ -74,10 +73,11 @@ body {
 }
 
 .app-container {
-    width: 100%;
-    max-width: 1200px;
-    padding: 20px;
+    width: 95%;
+    max-width: 1600px;
+    padding: 40px 20px;
     z-index: 10;
+    margin: auto;
 }
 
 /* Glassmorphism */
@@ -99,7 +99,7 @@ body {
 }
 
 .dashboard {
-    max-width: 1000px;
+    width: 100%;
     margin: 0 auto;
 }
 
@@ -227,6 +227,18 @@ select option {
 
 .table-container {
     overflow-x: auto;
+    max-height: 65vh;
+    overflow-y: auto;
+}
+
+/* Scrollbar custom para la tabla */
+.table-container::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+.table-container::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
 }
 
 table {
@@ -246,6 +258,10 @@ th {
     font-size: 0.9rem;
     text-transform: uppercase;
     letter-spacing: 0.05em;
+    position: sticky;
+    top: 0;
+    background: rgba(30, 41, 59, 0.95);
+    z-index: 1;
 }
 
 tbody tr { transition: background 0.2s; }
@@ -270,3 +286,36 @@ tbody tr:hover { background: rgba(255, 255, 255, 0.05); }
 .error-msg { background: rgba(239, 68, 68, 0.2); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.3); }
 .success-msg { background: rgba(16, 185, 129, 0.2); color: #6ee7b7; border: 1px solid rgba(16, 185, 129, 0.3); }
 .loading { text-align: center; padding: 20px; color: var(--text-muted); }
+
+/* Botones de accion en tabla */
+.btn-action {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 6px;
+    padding: 6px 10px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-right: 4px;
+    margin-bottom: 4px;
+}
+.btn-action:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+.btn-action.btn-success {
+    background: rgba(16, 185, 129, 0.2);
+    border-color: rgba(16, 185, 129, 0.3);
+    color: #6ee7b7;
+}
+.btn-action.btn-success:hover {
+    background: rgba(16, 185, 129, 0.4);
+}
+.btn-action.btn-danger {
+    background: rgba(239, 68, 68, 0.2);
+    border-color: rgba(239, 68, 68, 0.3);
+    color: #fca5a5;
+}
+.btn-action.btn-danger:hover {
+    background: rgba(239, 68, 68, 0.4);
+}
