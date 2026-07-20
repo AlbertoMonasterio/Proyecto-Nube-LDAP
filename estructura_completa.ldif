@@ -1,4 +1,13 @@
-# 1. Organización principal (Facultades y Departamentos)
+# ==========================================
+# ESTRUCTURA COMPLETA DEL DIRECTORIO LDAP
+# ==========================================
+
+# 1. Unidad Organizativa Base para Grupos (Roles)
+dn: ou=grupos,dc=proyecto,dc=ucab
+objectClass: organizationalUnit
+ou: grupos
+
+# 2. Unidades Organizativas (Facultades)
 dn: ou=Ingenieria,dc=proyecto,dc=ucab
 objectClass: organizationalUnit
 ou: Ingenieria
@@ -19,98 +28,105 @@ dn: ou=RRHH,dc=proyecto,dc=ucab
 objectClass: organizationalUnit
 ou: RRHH
 
-# 2. Contenedor de Grupos de Roles (RBAC)
-dn: ou=grupos,dc=proyecto,dc=ucab
-objectClass: organizationalUnit
-ou: grupos
+# 3. Usuarios de Prueba (Asignados a sus Facultades)
 
-# 3. Usuarios de prueba
-dn: cn=amonasterio,ou=Ingenieria,dc=proyecto,dc=ucab
+# Usuarios en RRHH (Administradores)
+dn: cn=jperez,ou=RRHH,dc=proyecto,dc=ucab
 objectClass: inetOrgPerson
-cn: amonasterio
-givenName: Alberto
-sn: Monasterio
-userPassword: {SSHA}JZFxasku4DXc3W9WnAXZT6zIVWn3LMg4
-mail: amonasterio@est.ucab.edu.ve
-
-dn: cn=jmondim,ou=Ingenieria,dc=proyecto,dc=ucab
-objectClass: inetOrgPerson
-cn: jmondim
-givenName: Jose
-sn: Mondim
-userPassword: {SSHA}eFR85YbfIOfBSFTxbmPuPj5CqiQdAKK9
-mail: jmondim@est.ucab.edu.ve
-
-dn: cn=prof_lopez,ou=Ingenieria,dc=proyecto,dc=ucab
-objectClass: inetOrgPerson
-cn: prof_lopez
-givenName: Eduardo
-sn: Lopez
-userPassword: {SSHA}DG/efyGPghwEHFk/FkS/ZgolEE9CwU/L
-mail: elopez@prof.ucab.edu.ve
-
-dn: cn=dcastillo,ou=Ingenieria,dc=proyecto,dc=ucab
-objectClass: inetOrgPerson
-cn: dcastillo
-givenName: Daniel
-sn: Castillo
+objectClass: top
+cn: jperez
+givenName: Juan
+sn: Perez
 userPassword: {SSHA}yW6kGXEWzhsu73ERqCMhw0t+P31k1kLJ
-mail: dcastillo@admin.ucab.edu.ve
+mail: jperez@admin.ucab.edu.ve
 
-dn: cn=lejimenez,ou=Derecho,dc=proyecto,dc=ucab
+dn: cn=mgomez,ou=RRHH,dc=proyecto,dc=ucab
 objectClass: inetOrgPerson
-cn: lejimenez
-givenName: Levin
-sn: Jimenez
-userPassword: {SSHA}eFR85YbfIOfBSFTxbmPuPj5CqiQdAKK9
-mail: lejimenez@est.ucab.edu.ve
-
-dn: cn=mrodriguez,ou=Administracion,dc=proyecto,dc=ucab
-objectClass: inetOrgPerson
-cn: mrodriguez
+objectClass: top
+cn: mgomez
 givenName: Maria
-sn: Rodriguez
+sn: Gomez
 userPassword: {SSHA}eFR85YbfIOfBSFTxbmPuPj5CqiQdAKK9
-mail: mrodriguez@prof.ucab.edu.ve
+mail: mgomez@admin.ucab.edu.ve
 
-dn: cn=cgonzalez,ou=RRHH,dc=proyecto,dc=ucab
+# Usuarios en Ingeniería
+dn: cn=lsilva,ou=Ingenieria,dc=proyecto,dc=ucab
 objectClass: inetOrgPerson
-cn: cgonzalez
+objectClass: top
+cn: lsilva
+givenName: Luis
+sn: Silva
+userPassword: {SSHA}DG/efyGPghwEHFk/FkS/ZgolEE9CwU/L
+mail: lsilva@prof.ucab.edu.ve
+
+dn: cn=cmendez,ou=Ingenieria,dc=proyecto,dc=ucab
+objectClass: inetOrgPerson
+objectClass: top
+cn: cmendez
 givenName: Carlos
-sn: Gonzalez
-userPassword: {SSHA}eFR85YbfIOfBSFTxbmPuPj5CqiQdAKK9
-mail: cgonzalez@admin.ucab.edu.ve
+sn: Mendez
+userPassword: {SSHA}JZFxasku4DXc3W9WnAXZT6zIVWn3LMg4
+mail: cmendez@est.ucab.edu.ve
 
-dn: cn=alopez,ou=Medicina,dc=proyecto,dc=ucab
+dn: cn=etorres,ou=Ingenieria,dc=proyecto,dc=ucab
 objectClass: inetOrgPerson
-cn: alopez
-givenName: Ana
-sn: Lopez
+objectClass: top
+cn: etorres
+givenName: Elena
+sn: Torres
 userPassword: {SSHA}eFR85YbfIOfBSFTxbmPuPj5CqiQdAKK9
-mail: alopez@est.ucab.edu.ve
+mail: etorres@est.ucab.edu.ve
+
+# Usuarios en Derecho
+dn: cn=pvargas,ou=Derecho,dc=proyecto,dc=ucab
+objectClass: inetOrgPerson
+objectClass: top
+cn: pvargas
+givenName: Pedro
+sn: Vargas
+userPassword: {SSHA}eFR85YbfIOfBSFTxbmPuPj5CqiQdAKK9
+mail: pvargas@est.ucab.edu.ve
+
+# Usuarios en Administración
+dn: cn=arojas,ou=Administracion,dc=proyecto,dc=ucab
+objectClass: inetOrgPerson
+objectClass: top
+cn: arojas
+givenName: Ana
+sn: Rojas
+userPassword: {SSHA}eFR85YbfIOfBSFTxbmPuPj5CqiQdAKK9
+mail: arojas@prof.ucab.edu.ve
+
+# Usuarios en Medicina
+dn: cn=scastro,ou=Medicina,dc=proyecto,dc=ucab
+objectClass: inetOrgPerson
+objectClass: top
+cn: scastro
+givenName: Sofia
+sn: Castro
+userPassword: {SSHA}eFR85YbfIOfBSFTxbmPuPj5CqiQdAKK9
+mail: scastro@est.ucab.edu.ve
+
 
 # 4. Grupo de rol: administradores
 dn: cn=admins,ou=grupos,dc=proyecto,dc=ucab
 objectClass: groupOfNames
 cn: admins
-description: Rol administrativo con permisos de gestion de usuarios
-member: cn=dcastillo,ou=Ingenieria,dc=proyecto,dc=ucab
-member: cn=cgonzalez,ou=RRHH,dc=proyecto,dc=ucab
+member: cn=jperez,ou=RRHH,dc=proyecto,dc=ucab
+member: cn=mgomez,ou=RRHH,dc=proyecto,dc=ucab
 
 # 5. Grupo de rol: profesores
 dn: cn=profesores,ou=grupos,dc=proyecto,dc=ucab
 objectClass: groupOfNames
 cn: profesores
-description: Rol docente
-member: cn=prof_lopez,ou=Ingenieria,dc=proyecto,dc=ucab
-member: cn=mrodriguez,ou=Administracion,dc=proyecto,dc=ucab
+member: cn=lsilva,ou=Ingenieria,dc=proyecto,dc=ucab
+member: cn=arojas,ou=Administracion,dc=proyecto,dc=ucab
 
 # 6. Grupo de rol: estudiantes
 dn: cn=estudiantes,ou=grupos,dc=proyecto,dc=ucab
 objectClass: groupOfNames
 cn: estudiantes
-description: Rol estudiantil
-member: cn=amonasterio,ou=Ingenieria,dc=proyecto,dc=ucab
-member: cn=jmondim,ou=Ingenieria,dc=proyecto,dc=ucab
-member: cn=lejimenez,ou=Derecho,dc=proyecto,dc=ucab
-member: cn=alopez,ou=Medicina,dc=proyecto,dc=ucab
+member: cn=cmendez,ou=Ingenieria,dc=proyecto,dc=ucab
+member: cn=etorres,ou=Ingenieria,dc=proyecto,dc=ucab
+member: cn=pvargas,ou=Derecho,dc=proyecto,dc=ucab
+member: cn=scastro,ou=Medicina,dc=proyecto,dc=ucab
