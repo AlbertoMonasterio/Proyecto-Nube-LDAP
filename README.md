@@ -24,13 +24,13 @@ The database comes pre-seeded with the following users for testing purposes:
 
 | Role | Department/Faculty | Username | Password |
 |---|---|---|---|
-| **Admin** | Ingenieria | `dcastillo` | `adminpassword` |
-| **Admin** | RRHH | `cgonzalez` | `clave123` |
-| **Professor** | Ingenieria | `prof_lopez` | `profepassword` |
-| **Professor** | Administracion | `mrodriguez` | `clave123` |
-| **Student** | Ingenieria | `amonasterio` | `123456` |
-| **Student** | Ingenieria | `jmondim` | `clave123` |
-| **Student** | Derecho | `lejimenez` | `clave123` |
-| **Student** | Medicina | `alopez` | `clave123` |
+| **Admin** | RRHH | `jperez` | `adminpassword` |
+| **Admin** | RRHH | `mgomez` | `clave123` |
+| **Professor** | Ingenieria | `lsilva` | `profepassword` |
+| **Professor** | Administracion | `arojas` | `clave123` |
+| **Student** | Ingenieria | `cmendez` | `123456` |
+| **Student** | Ingenieria | `etorres` | `clave123` |
+| **Student** | Derecho | `pvargas` | `clave123` |
+| **Student** | Medicina | `scastro` | `clave123` |
 
 > **Note**: For security, all test passwords are SSHA-hashed within the LDAP initialization file. New passwords created via the UI are automatically hashed by the backend API.
